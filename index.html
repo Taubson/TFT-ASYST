@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TFT Asystent</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px; }
+        h1 { text-align: center; }
+        input { width: 100%; padding: 10px; margin-bottom: 20px; }
+        .champion { background-color: white; padding: 10px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .champion img { width: 50px; height: 50px; vertical-align: middle; margin-right: 10px; border-radius: 50%; }
+    </style>
+</head>
+<body>
+
+    <h1>TFT Asystent</h1>
+    <input type="text" id="search" placeholder="Wyszukaj championa...">
+    <div id="champions"></div>
+
+    <script>
+        const apiUrl = 'https://ddragon.leagueoflegends.com/cdn/14.12.1/data/en_US/champion.json';
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const champions = Object.values(data.data);
+                displayChampions(champions);
+
+                document.getElementById('search').addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const filtered = champions.filter(champ => champ.name.toLowerCase().includes(searchTerm));
+                    displayChampions(filtered);
+                });
+            });
+
+        function displayChampions(champions) {
+            const container = document.getElementById('champions');
+            container.innerHTML = '';
+
+            champions.forEach(champ => {
+                const champDiv = document.createElement('div');
+                champDiv.className = 'champion';
+                champDiv.innerHTML = `<img src='https://ddragon.leagueoflegends.com/cdn/14.12.1/img/champion/${champ.image.full}' alt='${champ.name}'> <strong>${champ.name}</strong> <br> Przykładowy build: Guinsoo's Rageblade, Bloodthirster, Giant Slayer`;
+                container.appendChild(champDiv);
+            });
+        }
+    </script>
+
+</body>
+</html>
